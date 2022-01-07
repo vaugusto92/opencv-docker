@@ -1,7 +1,5 @@
 #!/bin/bash
 
-OPENCV_VERSION='4.5.5'
-
 packages=()
 specialCommands=('system-update' 'opencv')
 
@@ -11,7 +9,9 @@ readPackages() {
 }
 
 installPackages() {
-  apt install -y "${packages[@]}"
+  apt-get update &&
+  apt-get install -y --no-install-recommends "${packages[@]}" &&
+  apt-get clean
 }
 
 checkInstalledPackages() {
@@ -25,29 +25,24 @@ checkInstalledPackages() {
   echo
 }
 
-if [ $1 = 'system-update' ]; then
-  apt -y update
-  apt -y upgrade 
-  apt -y dist-upgrade
-  apt -y autoremove
-fi
-
 if [ $1 = 'opencv' ]; then
-  apt install -y unzip wget
-  wget https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip
-  unzip ${OPENCV_VERSION}.zip
-  rm ${OPENCV_VERSION}.zip
-  mv opencv-${OPENCV_VERSION} OpenCV
-  cd OpenCV
-  mkdir build
-  cd build
-  cmake -DWITH_OPENGL=ON -DFORCE_VTK=ON -DWITH_TBB=ON -DWITH_GDAL=ON -DWITH_XINE=ON -DBUILD_EXAMPLES=ON -DENABLE_PRECOMPILED_HEADERS=OFF ..
+  wget -q -O /tmp/opencv.tar.gz https://codeload.github.com/opencv/opencv/tar.gz/$2
+  cd /tmp/
+  tar -xf /tmp/opencv.tar.gz
+  wget -q -O /tmp/opencv_contrib.tar.gz https://codeload.github.com/opencv/opencv_contrib/tar.gz/$2
+  cd /tmp/
+  tar -xf /tmp/opencv_contrib.tar.gz
+  mkdir /tmp/build
+  cd /tmp/build
+  cmake -DBUILD_TESTS=OFF -DOPENCV_EXTRA_MODULES_PATH=../opencv_contrib-$2/modules ../opencv-$2/
   make -j4
-  make install
-  ldconfig
+   make install
+  rm -rf /tmp/build
+  rm -rf /tmp/opencv*
 fi
 
 if [[ ! " ${specialCommands[*]} " =~  $1 ]]; then
+  export DEBIAN_FRONTEND noninteractive
   readPackages $1
   installPackages
   checkInstalledPackages

@@ -1,7 +1,0 @@
-zlib1g-dev
-libjpeg-dev
-libwebp-dev
-libpng-dev
-libtiff5-dev
-libopenexr-dev
-libgdal-dev

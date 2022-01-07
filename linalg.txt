@@ -1,2 +1,0 @@
-libtbb-dev
-libeigen3-dev
