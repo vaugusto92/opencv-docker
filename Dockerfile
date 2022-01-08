@@ -1,5 +1,10 @@
 FROM debian:bullseye-slim
 
+ARG platform
+ARG version
+
+COPY ./ ./
+
 RUN export DEBIAN_FRONTEND noninteractive && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -35,14 +40,7 @@ RUN export DEBIAN_FRONTEND noninteractive && \
         && \
     apt-get clean
 
-RUN wget -q -O /tmp/opencv.tar.gz https://codeload.github.com/opencv/opencv/tar.gz/4.5.5 && \
-    cd /tmp/ && tar -xf /tmp/opencv.tar.gz && \
-    wget -q -O /tmp/opencv_contrib.tar.gz https://codeload.github.com/opencv/opencv_contrib/tar.gz/4.5.5 && \
-    cd /tmp/ && tar -xf /tmp/opencv_contrib.tar.gz && \
-    mkdir /tmp/build && cd /tmp/build && \
-    cmake -DBUILD_TESTS=OFF -DOPENCV_EXTRA_MODULES_PATH=../opencv_contrib-4.5.5/modules ../opencv-4.5.5/ && \
-    make -j4 && make install && \
-    rm -rf /tmp/build && rm -rf /tmp/opencv*
+RUN chmod +x install-opencv.sh && ./install-opencv.sh platform version
 
 WORKDIR /work
 
