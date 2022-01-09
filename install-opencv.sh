@@ -13,28 +13,32 @@ if [[ -z "$version" ]]; then
   exit
 fi
 
-wget -q -O /tmp/opencv.tar.gz https://codeload.github.com/opencv/opencv/tar.gz/$version
+cmake_options="-DBUILD_TESTS=OFF -DBUILD_opencv_python2=OFF -DOPENCV_EXTRA_MODULES_PATH=../opencv_contrib-$version/modules"
 
-cd /tmp/ 
+if [ $platform = 'java' ]; then
+  cmake_options="-DBUILD_TESTS=OFF -DBUILD_SHARED_LIBS=OFF -DBUILD_opencv_python2=OFF -DBUILD_opencv_python3=OFF -DOPENCV_EXTRA_MODULES_PATH=../opencv_contrib-$version/modules"
+fi
+
+cd /tmp
+
+wget -q -O /tmp/opencv.tar.gz https://codeload.github.com/opencv/opencv/tar.gz/$version
 tar -xf /tmp/opencv.tar.gz 
 
 wget -q -O /tmp/opencv_contrib.tar.gz https://codeload.github.com/opencv/opencv_contrib/tar.gz/$version
-cd /tmp/ 
 tar -xf /tmp/opencv_contrib.tar.gz 
 
 mkdir /tmp/build
-cd /tmp/build 
+cd /tmp/build
 
-cmake -DBUILD_TESTS=OFF -DOPENCV_EXTRA_MODULES_PATH=../opencv_contrib-$version/modules ../opencv-$version/
-
+cmake "$cmake_options" ../opencv-$version/
 
 make -j4
 make install
 
-rm -rf /tmp/build
-rm -rf /tmp/opencv*
+if [ $platform = 'java' ]; then
+  cp /tmp/build/bin/*.jar /work
+  cp /tmp/build/lib/libopencv_java* /usr/local/lib
+fi
 
-
-    
-
-# -DBUILD_SHARED_LIBS=OFF ..
+# rm -rf /tmp/build
+# rm -rf /tmp/opencv*
