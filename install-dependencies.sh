@@ -47,19 +47,17 @@ apt-get install -y --no-install-recommends \
     tesseract-ocr-eng \
     libzbar-dev \
 
-if [ $platform = 'python' ]; then
-    printf "\e[1;34m#########################################################################\n\e[0m"
-    printf "\e[1;34mInstalling Python dependencies...\n\e[0m"
-    printf "\e[1;34m#########################################################################\n\e[0m"
+printf "\e[1;34m#########################################################################\n\e[0m"
+printf "\e[1;34mInstalling Python dependencies...\n\e[0m"
+printf "\e[1;34m#########################################################################\n\e[0m"
 
-    apt-get install -y --no-install-recommends \
-        python3 \
-        python3-dev \
-        python3-pip \
-        python3-setuptools \
-        python3-numpy \
-        pkg-config
-fi
+apt-get install -y --no-install-recommends \
+    python3 \
+    python3-dev \
+    python3-pip \
+    python3-setuptools \
+    python3-numpy \
+    pkg-config
 
 if [ $platform = 'java' ]; then
     printf "\e[1;34m#########################################################################\n\e[0m"

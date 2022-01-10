@@ -36,9 +36,25 @@ make -j4
 make install
 
 if [ $platform = 'java' ]; then
-  cp /tmp/build/bin/*.jar /work
-  cp /tmp/build/lib/libopencv_java* /usr/local/lib
+  mkdir /usr/local/opencv
+
+  mkdir /usr/local/opencv/bin
+  mkdir /usr/local/opencv/lib
+  mkdir /usr/local/opencv/samples
+  
+  mkdir /usr/local/opencv/samples/java
+  mkdir /usr/local/opencv/samples/clojure
+
+
+  cp -r /tmp/build/bin/. /usr/local/opencv/bin
+  cp -r /tmp/build/lib/. /usr/local/opencv/lib
+
+  cp -r /tmp/opencv-4.4.0/samples/java/ant/. /usr/local/opencv/samples/java
+  cp -r /tmp/opencv-4.4.0/samples/java/clojure/. /usr/local/opencv/samples/clojure
+
+  # lein localrepo install opencv-$version.jar opencv/opencv $version
+  # lein localrepo install opencv-$version.jar opencv/opencv $version
 fi
 
-# rm -rf /tmp/build
-# rm -rf /tmp/opencv*
+rm -rf /tmp/build
+rm -rf /tmp/opencv*
