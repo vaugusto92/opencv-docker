@@ -2,7 +2,7 @@
 
 docker build --build-arg platform=java --build-arg version=4.4.0 --tag opencv .
 
-docker run -it --rm opencv bash
+docker run -it -v $(pwd):/work --rm opencv bash
 
 java.library.path=/tmp/build/lib
 
@@ -22,10 +22,12 @@ mvn deploy:deploy-file -DgroupId=opencv \
                        -Durl=file:repo
 
 
-(defproject foo "0.1.0-SNAPSHOT"
-  :dependencies [[org.clojure/clojure "1.4.0"]
-                 [local/bar "1.0.0"]]
-  :repositories {"project" "file:repo"})
-
+(defproject simple-sample "0.1.0-SNAPSHOT"
+  :dependencies [[org.clojure/clojure "1.5.1"]
+                 [opencv/opencv "4.4.0"]
+                 [opencv/opencv-native "4.4.0"]]
+  :main simple-sample.core
+  :jvm-opts ["-Djava.library.path=/usr/local/opencv/build/lib/"]
+  :injections [(clojure.lang.RT/loadLibrary org.opencv.core.Core/NATIVE_LIBRARY_NAME)])
 
 cp install-opencv.sh /usr/local/opencv/
