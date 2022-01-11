@@ -2,6 +2,7 @@
 
 platform=$1
 version=$2
+folder=/usr/local/opencv
 
 if [[ -z "$platform" ]]; then 
   echo 'Argument platform not provided'
@@ -13,22 +14,40 @@ if [[ -z "$version" ]]; then
   exit
 fi
 
+setupClojureEnvironment() {
+  jar_version="${version//./""}"
+
+  build_folder=$folder/build
+  native_folder=$build_folder/native/linux/x86_64/
+
+  mkdir -p $build_folder/clj-opencv && cd $build_folder/clj-opencv
+  cp $build_folder/bin/opencv-$jar_version.jar .
+
+  mkdir -p $build_folder/native/linux/x86_64
+  cp $build_folder/lib/libopencv_java$jar_version.so $native_folder
+  jar -cMf opencv-native-$jar_version.jar $build_folder/native
+
+  cd $build_folder/clj-opencv
+
+  mvn deploy:deploy-file -DgroupId=opencv -DartifactId=opencv -Dversion=$version -Dpackaging=jar -Dfile=opencv-$jar_version.jar -Durl=file:repo
+  mvn deploy:deploy-file -DgroupId=opencv -DartifactId=opencv  -Dversion=$version -Dpackaging=jar -Dfile=opencv-native-$jar_version.jar  -Durl=file:repo
+}
+
 cmake_options="-DBUILD_TESTS=OFF -DBUILD_opencv_python2=OFF -DOPENCV_EXTRA_MODULES_PATH=../opencv_contrib-$version/modules"
 
 if [ $platform = 'java' ]; then
   cmake_options="-DBUILD_TESTS=OFF -DBUILD_SHARED_LIBS=OFF -DBUILD_opencv_python2=OFF -DBUILD_opencv_python3=OFF -DOPENCV_EXTRA_MODULES_PATH=../opencv_contrib-$version/modules"
 fi
 
-cd /tmp
+mkdir $folder && cd $folder
 
-wget -q -O /tmp/opencv.tar.gz https://codeload.github.com/opencv/opencv/tar.gz/$version
-tar -xf /tmp/opencv.tar.gz 
+wget -q -O $folder/opencv.tar.gz https://codeload.github.com/opencv/opencv/tar.gz/$version
+tar -xf $folder/opencv.tar.gz 
 
-wget -q -O /tmp/opencv_contrib.tar.gz https://codeload.github.com/opencv/opencv_contrib/tar.gz/$version
-tar -xf /tmp/opencv_contrib.tar.gz 
+wget -q -O $folder/opencv_contrib.tar.gz https://codeload.github.com/opencv/opencv_contrib/tar.gz/$version
+tar -xf $folder/opencv_contrib.tar.gz 
 
-mkdir /tmp/build
-cd /tmp/build
+mkdir $folder/build && cd $folder/build
 
 cmake "$cmake_options" ../opencv-$version/
 
@@ -36,25 +55,22 @@ make -j4
 make install
 
 if [ $platform = 'java' ]; then
-  mkdir /usr/local/opencv
+  cd $folder
 
-  mkdir /usr/local/opencv/bin
-  mkdir /usr/local/opencv/lib
-  mkdir /usr/local/opencv/samples
-  
-  mkdir /usr/local/opencv/samples/java
-  mkdir /usr/local/opencv/samples/clojure
+  cp -r build/bin/ . && cp -r build/lib/ .
+  rm -rf build
+  mkdir build && cp -r ./bin build/ && cp -r ./lib build/
+  rm -rf bin/ && rm -rf lib/
 
+  mkdir -p $folder/samples/java && mkdir -p $folder/samples/clojure
 
-  cp -r /tmp/build/bin/. /usr/local/opencv/bin
-  cp -r /tmp/build/lib/. /usr/local/opencv/lib
+  cp -r $folder/opencv-$version/samples/java/ant/. samples/java
+  cp -r $folder/opencv-$version/samples/java/clojure/. samples/clojure
 
-  cp -r /tmp/opencv-4.4.0/samples/java/ant/. /usr/local/opencv/samples/java
-  cp -r /tmp/opencv-4.4.0/samples/java/clojure/. /usr/local/opencv/samples/clojure
+  rm -rf opencv-$version
+  rm -rf opencv_contrib-$version
+  rm -f opencv.tar.gz
+  rm -f opencv_contrib.tar.gz
 
-  # lein localrepo install opencv-$version.jar opencv/opencv $version
-  # lein localrepo install opencv-$version.jar opencv/opencv $version
+  setupClojureEnvironment
 fi
-
-rm -rf /tmp/build
-rm -rf /tmp/opencv*
