@@ -64,7 +64,7 @@ if [ $platform = 'java' ]; then
     printf "\e[1;34mInstalling Java dependencies...\n\e[0m"
     printf "\e[1;34m#########################################################################\n\e[0m"
 
-    apt-get install -y --no-install-recommends ant default-jdk
+    apt-get install -y --no-install-recommends ant default-jdk leiningen maven
 fi
     
 apt-get clean
