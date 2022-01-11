@@ -27,10 +27,11 @@ setupClojureEnvironment() {
   cp $build_folder/lib/libopencv_java$jar_version.so $native_folder
   jar -cMf opencv-native-$jar_version.jar $build_folder/native
 
-  cd $build_folder/clj-opencv
+  echo "{:user {:plugins [[lein-localrepo \"0.5.2\"]]}}" > ~/.lein/profiles.clj
 
-  mvn deploy:deploy-file -DgroupId=opencv -DartifactId=opencv -Dversion=$version -Dpackaging=jar -Dfile=opencv-$jar_version.jar -Durl=file:repo
-  mvn deploy:deploy-file -DgroupId=opencv -DartifactId=opencv  -Dversion=$version -Dpackaging=jar -Dfile=opencv-native-$jar_version.jar  -Durl=file:repo
+  cd $build_folder/clj-opencv
+  lein localrepo install opencv-$jar_version.jar opencv/opencv $version
+  lein localrepo install opencv-native-$jar_version.jar opencv/opencv-native $version
 }
 
 cmake_options="-DBUILD_TESTS=OFF -DBUILD_opencv_python2=OFF -DOPENCV_EXTRA_MODULES_PATH=../opencv_contrib-$version/modules"
