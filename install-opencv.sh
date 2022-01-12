@@ -27,7 +27,10 @@ setupClojureEnvironment() {
   cp $build_folder/lib/libopencv_java$jar_version.so $native_folder
   jar -cMf opencv-native-$jar_version.jar $build_folder/native
 
-  echo "{:user {:plugins [[lein-localrepo \"0.5.2\"]]}}" > ~/.lein/profiles.clj
+  mkdir ~/.lein
+  cd ~/.lein
+  echo "{:user {:plugins [[lein-localrepo \"0.5.2\"]]}}" > profiles.clj
+  lein install
 
   cd $build_folder/clj-opencv
   lein localrepo install opencv-$jar_version.jar opencv/opencv $version
@@ -73,5 +76,5 @@ if [ $platform = 'java' ]; then
   rm -f opencv.tar.gz
   rm -f opencv_contrib.tar.gz
 
-  setupClojureEnvironment
+  #setupClojureEnvironment
 fi

@@ -11,6 +11,8 @@ ant -DocvJarDir=/tmp/build/bin/ -DocvLibDir=/tmp/build/lib/ rebuild-run
 
 ant -DocvJarDir=/usr/local/opencv/build/bin/ -DocvLibDir=/usr/local/opencv/build/lib/ rebuild-run
 
+ant -DopencvJarPath=$OPENCV_JAVA_BINARY_PATH -DopencvLibraryPath=$OPENCV_JAVA_LIBRARY_PATH rebuild-run
+
 cp -r opencv-4.4.0/samples/java/ant/. ./samples/ant/
 cp -r opencv-4.4.0/samples/java/clojure/. ./samples/clojure/
 
