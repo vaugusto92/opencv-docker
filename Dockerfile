@@ -1,18 +1,28 @@
-FROM debian:bullseye-slim
+FROM alpine:latest
 
-ARG platform
-ARG version
+ENV VERSION=4.4.0
+ENV LANG=C.UTF-8
 
-ENV OPENCV_JAVA_LIBRARY_PATH="/usr/local/opencv/build/lib/"
-ENV OPENCV_JAVA_BINARY_PATH="/usr/local/opencv/build/bin/"
+# Add Edge repos
+RUN echo -e "\n\
+@edgemain http://nl.alpinelinux.org/alpine/edge/main\n\
+@edgecomm http://nl.alpinelinux.org/alpine/edge/community\n\
+@edgetest http://nl.alpinelinux.org/alpine/edge/testing"\
+  >> /etc/apk/repositories
 
-COPY ./ ./
+# Install required packages
+COPY ./dependencies.sh ./
+RUN chmod +x dependencies.sh && ./dependencies.sh
 
-RUN mkdir /work && chmod +x install-dependencies.sh && chmod +x install-opencv.sh
+COPY ./leiningen.sh ./
+RUN chmod +x leiningen.sh && ./leiningen.sh
 
-RUN ./install-dependencies.sh $platform
-RUN ./install-opencv.sh $platform $version
+COPY ./opencv.sh ./
+RUN chmod +x opencv.sh && ./opencv.sh $VERSION
+
+COPY ./samples ./
+COPY ./clean_samples.sh ./
 
 WORKDIR /work
 
-CMD bash
+CMD [ "bash" ]

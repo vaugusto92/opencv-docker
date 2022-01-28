@@ -30,7 +30,6 @@ setupClojureEnvironment() {
   mkdir ~/.lein
   cd ~/.lein
   echo "{:user {:plugins [[lein-localrepo \"0.5.2\"]]}}" > profiles.clj
-  lein install
 
   cd $build_folder/clj-opencv
   lein localrepo install opencv-$jar_version.jar opencv/opencv $version
@@ -66,15 +65,10 @@ if [ $platform = 'java' ]; then
   mkdir build && cp -r ./bin build/ && cp -r ./lib build/
   rm -rf bin/ && rm -rf lib/
 
-  mkdir -p $folder/samples/java && mkdir -p $folder/samples/clojure
-
-  cp -r $folder/opencv-$version/samples/java/ant/. samples/java
-  cp -r $folder/opencv-$version/samples/java/clojure/. samples/clojure
-
   rm -rf opencv-$version
   rm -rf opencv_contrib-$version
   rm -f opencv.tar.gz
   rm -f opencv_contrib.tar.gz
 
-  #setupClojureEnvironment
+  setupClojureEnvironment
 fi
