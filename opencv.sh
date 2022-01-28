@@ -4,7 +4,7 @@ FOLDER=/usr/local/opencv
 setupClojureEnvironment() {
   jar_version="${VERSION//./""}"
 
-  build_folder=$folder/build
+  build_folder=$FOLDER/build
   native_folder=$build_folder/native/linux/x86_64/
 
   mkdir -p $build_folder/clj-opencv && cd $build_folder/clj-opencv
@@ -33,7 +33,13 @@ tar -xf $FOLDER/opencv_contrib.tar.gz
 
 mkdir $FOLDER/build && cd $FOLDER/build
 
-cmake "$cmake_options" ../opencv-$VERSION/
+cmake -DBUILD_TESTS=OFF \
+      -DBUILD_opencv_java=ON \
+      -DBUILD_SHARED_LIBS=OFF \
+      -DBUILD_opencv_python2=OFF \
+      -DBUILD_opencv_python3=OFF \
+      -DOPENCV_EXTRA_MODULES_PATH=../opencv_contrib-$VERSION/modules \
+      ../opencv-$VERSION/
 
 make -j4
 make install
