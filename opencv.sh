@@ -14,7 +14,7 @@ setupClojureEnvironment() {
   cp $build_folder/lib/libopencv_java$jar_version.so $native_folder
   jar -cMf opencv-native-$jar_version.jar $build_folder/native
 
-  mkdir ~/.lein
+  mkdir -p ~/.lein
   cd ~/.lein
   echo "{:user {:plugins [[lein-localrepo \"0.5.2\"]]}}" > profiles.clj
 
@@ -41,7 +41,7 @@ cmake -DBUILD_TESTS=OFF \
       -DOPENCV_EXTRA_MODULES_PATH=../opencv_contrib-$VERSION/modules \
       ../opencv-$VERSION/
 
-make -j4
+make -j$(nproc)
 make install
 
 cd $FOLDER
