@@ -1,7 +1,9 @@
 FROM alpine:latest
 
+ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk/
 ENV VERSION=4.4.0
-ENV LANG=C.UTF-8
+ENV OPENCV_JAVA_BINARY_PATH=/usr/local/opencv/build/bin/
+ENV OPENCV_JAVA_LIBRARY_PATH=/usr/local/opencv/build/lib/
 
 # Add Edge repos
 RUN echo -e "\n\
