@@ -4,13 +4,16 @@ on:
 name: ci
 
 jobs:
-  ci:
+  build:
+    name: Build image
     runs-on: ubuntu-latest
     steps:
-    - uses: docker-practice/actions-setup-docker@master
-    - run: |
-        set -x
-
-        docker version
-
-        docker run --rm hello-world
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+      -
+        name: Run docker build   
+        run: |
+          set -x
+          docker version
+          docker build -t opencv .
