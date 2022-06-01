@@ -15,5 +15,10 @@ jobs:
         name: Run docker build   
         run: |
           set -x
-          docker version
           docker build -t opencv .
+      - 
+        name: Run health check   
+        run: |
+          set -x
+          docker run -it --rm -v $(pwd):/work opencv ./health-check.sh
+

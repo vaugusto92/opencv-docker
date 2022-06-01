@@ -1,8 +1,8 @@
-VERSION=$1
+OPENCV_VERSION=$1
 FOLDER=/usr/local/opencv
 
 setupClojureEnvironment() {
-  jar_version="${VERSION//./""}"
+  jar_version="${OPENCV_VERSION//./""}"
 
   build_folder=$FOLDER/build
   native_folder=$build_folder/native/linux/x86_64/
@@ -19,16 +19,16 @@ setupClojureEnvironment() {
   echo "{:user {:plugins [[lein-localrepo \"0.5.2\"]]}}" > profiles.clj
 
   cd $build_folder/clj-opencv
-  lein localrepo install opencv-$jar_version.jar opencv/opencv $VERSION
-  lein localrepo install opencv-native-$jar_version.jar opencv/opencv-native $VERSION
+  lein localrepo install opencv-$jar_version.jar opencv/opencv $OPENCV_VERSION
+  lein localrepo install opencv-native-$jar_version.jar opencv/opencv-native $OPENCV_VERSION
 }
 
 mkdir $FOLDER && cd $FOLDER
 
-wget -q -O $FOLDER/opencv.tar.gz https://codeload.github.com/opencv/opencv/tar.gz/$VERSION
+wget -q -O $FOLDER/opencv.tar.gz https://codeload.github.com/opencv/opencv/tar.gz/$OPENCV_VERSION
 tar -xf $FOLDER/opencv.tar.gz 
 
-wget -q -O $FOLDER/opencv_contrib.tar.gz https://codeload.github.com/opencv/opencv_contrib/tar.gz/$VERSION
+wget -q -O $FOLDER/opencv_contrib.tar.gz https://codeload.github.com/opencv/opencv_contrib/tar.gz/$OPENCV_VERSION
 tar -xf $FOLDER/opencv_contrib.tar.gz 
 
 mkdir $FOLDER/build && cd $FOLDER/build
@@ -38,8 +38,8 @@ cmake -DBUILD_TESTS=OFF \
       -DBUILD_SHARED_LIBS=OFF \
       -DBUILD_opencv_python2=OFF \
       -DBUILD_opencv_python3=OFF \
-      -DOPENCV_EXTRA_MODULES_PATH=../opencv_contrib-$VERSION/modules \
-      ../opencv-$VERSION/
+      -DOPENCV_EXTRA_MODULES_PATH=../opencv_contrib-$OPENCV_VERSION/modules \
+      ../opencv-$OPENCV_VERSION/
 
 make -j$(nproc)
 make install
@@ -51,8 +51,8 @@ rm -rf build
 mkdir build && cp -r ./bin build/ && cp -r ./lib build/
 rm -rf bin/ && rm -rf lib/
 
-rm -rf opencv-$VERSION
-rm -rf opencv_contrib-$VERSION
+rm -rf opencv-$OPENCV_VERSION
+rm -rf opencv_contrib-$OPENCV_VERSION
 rm -f opencv.tar.gz
 rm -f opencv_contrib.tar.gz
 
