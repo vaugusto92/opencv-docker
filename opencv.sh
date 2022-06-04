@@ -25,11 +25,11 @@ setupClojureEnvironment() {
 
 mkdir $FOLDER && cd $FOLDER
 
-wget -q -O $FOLDER/opencv.tar.gz https://codeload.github.com/opencv/opencv/tar.gz/$OPENCV_VERSION
-tar -xf $FOLDER/opencv.tar.gz 
+wget -q -O $FOLDER/opencv.zip https://github.com/opencv/opencv/archive/$OPENCV_VERSION.zip
+unzip $FOLDER/opencv.zip 
 
-wget -q -O $FOLDER/opencv_contrib.tar.gz https://codeload.github.com/opencv/opencv_contrib/tar.gz/$OPENCV_VERSION
-tar -xf $FOLDER/opencv_contrib.tar.gz 
+# wget -q -O $FOLDER/opencv_contrib.tar.gz https://codeload.github.com/opencv/opencv_contrib/tar.gz/$OPENCV_VERSION
+# tar -xf $FOLDER/opencv_contrib.tar.gz 
 
 mkdir $FOLDER/build && cd $FOLDER/build
 
@@ -38,7 +38,6 @@ cmake -DBUILD_TESTS=OFF \
       -DBUILD_SHARED_LIBS=OFF \
       -DBUILD_opencv_python2=OFF \
       -DBUILD_opencv_python3=OFF \
-      -DOPENCV_EXTRA_MODULES_PATH=../opencv_contrib-$OPENCV_VERSION/modules \
       ../opencv-$OPENCV_VERSION/
 
 make -j$(nproc)
@@ -52,8 +51,6 @@ mkdir build && cp -r ./bin build/ && cp -r ./lib build/
 rm -rf bin/ && rm -rf lib/
 
 rm -rf opencv-$OPENCV_VERSION
-rm -rf opencv_contrib-$OPENCV_VERSION
 rm -f opencv.tar.gz
-rm -f opencv_contrib.tar.gz
 
 setupClojureEnvironment
