@@ -1,18 +1,41 @@
-OPENCV_VERSION=4.5.5
-OPENCV_TMP=/tmp/opencv
+OPENCV_TMP=~/opencv
 
-mkdir -p $OPENCV_TMP && cd $OPENCV_TMP
+createBuildDirectories() {
+  mkdir -p $OPENCV_TMP && mkdir -p $OPENCV_TMP/build
+}
 
-wget -q -O $OPENCV_TMP/opencv.zip https://github.com/opencv/opencv/archive/$OPENCV_VERSION.zip
-unzip -q $OPENCV_TMP/opencv.zip 
+downloadOpenCV() {
+  OPENCV_VERSION=$1
+  wget -q -O $OPENCV_TMP/opencv.zip https://github.com/opencv/opencv/archive/$OPENCV_VERSION.zip
+  unzip -q $OPENCV_TMP/opencv.zip 
+}
 
-mkdir -p $OPENCV_TMP/build && cd $OPENCV_TMP/build
+buildOpenCV() {
+  OPENCV_VERSION=4.5.5
 
-cmake -DBUILD_TESTS=OFF \
-      -DBUILD_opencv_java=ON \
-      -DBUILD_SHARED_LIBS=ON \
-      -DBUILD_opencv_python2=OFF \
-      -DBUILD_opencv_python3=OFF \
-      ../opencv-$OPENCV_VERSION/
+  createBuildDirectories
+  cd $OPENCV_TMP
 
-make -j$(nproc)
+  downloadOpenCV $OPENCV_VERSION 
+  cd $OPENCV_TMP/build
+
+  cmake -DBUILD_TESTS=OFF \
+        -DBUILD_opencv_java=ON \
+        -DBUILD_SHARED_LIBS=ON \
+        -DBUILD_opencv_python2=OFF \
+        -DBUILD_opencv_python3=OFF \
+        ../opencv-$OPENCV_VERSION/
+
+  make -j$(nproc)
+
+  echo "Constructing a tarball with the compiled files."
+  cd ~/ && tar -cvzf opencv-build.tar.gz *
+  echo "Done."
+}
+
+function ensureBuildSuccess() {
+  find . -type f -name "opencv-build.tar.gz" | grep . || exit 1
+}
+
+buildOpenCV
+ensureBuildSuccess
