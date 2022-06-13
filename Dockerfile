@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM alpine:latest AS environment
 
 ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk/
 ENV OPENCV_VERSION=4.5.5
@@ -18,14 +18,3 @@ RUN chmod +x dependencies.sh && ./dependencies.sh
 
 COPY ./leiningen.sh ./
 RUN chmod +x leiningen.sh && ./leiningen.sh
-
-COPY ./opencv.sh ./
-RUN chmod +x opencv.sh && ./opencv.sh $OPENCV_VERSION
-
-COPY ./samples ./
-COPY ./clean-samples.sh ./
-COPY ./health-check.sh ./
-
-WORKDIR /work
-
-CMD [ "bash" ]
