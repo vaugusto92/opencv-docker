@@ -15,5 +15,8 @@ jobs:
         name: Build OpenCV  
         run: chmod +x build-opencv.sh && ./build-opencv.sh
       -
-        name: Prepare the Docker Image environment
+        name: Build the environment pre-image
         run: docker build --target environment .
+      -
+        name: Build the OpenCV image
+        run: docker build --target install .
