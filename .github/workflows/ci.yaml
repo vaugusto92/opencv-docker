@@ -8,15 +8,14 @@ jobs:
     name: Build OpenCV Docker image
     runs-on: ubuntu-latest
     steps:
-      -
-        name: Checkout
+      - name: Checkout
         uses: actions/checkout@v3
-      -
-        name: Build OpenCV  
+
+      - name: Build OpenCV  
         run: chmod +x build-opencv.sh && ./build-opencv.sh
-      -
-        name: Build the environment pre-image
+
+      - name: Build the environment pre-image
         run: docker build --target environment .
-      -
-        name: Build the OpenCV image
+
+      - name: Build the OpenCV image
         run: docker build --target install .

@@ -11,7 +11,7 @@ downloadOpenCV() {
 }
 
 buildOpenCV() {
-  OPENCV_VERSION=4.5.5
+  OPENCV_VERSION=4.6.0
 
   createBuildDirectories
   cd $OPENCV_TMP
