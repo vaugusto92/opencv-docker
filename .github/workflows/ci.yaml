@@ -5,6 +5,7 @@ name: ci
 
 env:
   OPENCV_TAR_NAME: opencv-build.tar.gz
+  OPENCV_VERSION: '4.6.0'
 
 jobs:
   build:
@@ -16,6 +17,12 @@ jobs:
 
       - name: Build OpenCV  
         run: bash build-opencv.sh
+
+      - name: Upload OpenCV binaries
+        uses: actions/upload-artifact@v3
+        with:
+          name: opencv-build-$OPENCV_VERSION.tar.gz
+          path: ~/opencv/opencv-build.tar.gz
 
       - name: Build the OpenCV image
         run: |
