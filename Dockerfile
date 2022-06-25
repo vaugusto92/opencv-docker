@@ -9,9 +9,11 @@ COPY ./dependencies.sh ./
 RUN . dependencies.sh
 
 COPY ./leiningen.sh ./
-RUN . leiningen.sh
+RUN bash leiningen.sh
+
+RUN bash -c hash -r
 
 COPY ./opencv-build.tar.gz ./
 COPY ./install-opencv.sh ./
 
-RUN . install-opencv.sh
+RUN bash install-opencv.sh

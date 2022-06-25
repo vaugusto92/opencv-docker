@@ -21,7 +21,7 @@ jobs:
       - name: Upload OpenCV binaries
         uses: actions/upload-artifact@v3
         with:
-          name: opencv-build-$OPENCV_VERSION.tar.gz
+          name: opencv-build-${{ env.OPENCV_VERSION }}.tar.gz
           path: ~/opencv/opencv-build.tar.gz
 
       - name: Build the OpenCV image
