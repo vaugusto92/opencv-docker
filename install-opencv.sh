@@ -1,11 +1,11 @@
 OPENCV_VERSION=4.6.0
 OPENCV_HOME=/usr/local/opencv
 
-env
-
 mkdir -p $OPENCV_HOME
 
-tar -xvf opencv-build.tar.gz -C $OPENCV_HOME
+echo "Unpacking the tarball with the compiled files."
+tar -xf opencv-build.tar.gz -C $OPENCV_HOME
+echo "Done."
 
 cd $OPENCV_HOME/build
 

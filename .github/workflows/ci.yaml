@@ -17,10 +17,7 @@ jobs:
       - name: Build OpenCV  
         run: bash build-opencv.sh
 
-      - name: Build the environment pre-image
-        run: docker build --target environment .
-
       - name: Build the OpenCV image
         run: |
           cp ~/opencv/$OPENCV_TAR_NAME .
-          docker build --target install .
+          docker build -t opencv .
