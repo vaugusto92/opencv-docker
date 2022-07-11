@@ -24,12 +24,12 @@ buildOpenCV() {
         -DBUILD_SHARED_LIBS=ON \
         -DBUILD_opencv_python2=OFF \
         -DBUILD_opencv_python3=OFF \
-        ../opencv-$OPENCV_VERSION/
+        ../opencv-4.6.0/ > /dev/null
 
-  make -j$(nproc)
+  make -s -j$(nproc) > /dev/null
 
   echo "Constructing a tarball with the compiled files."
-  cd ~/opencv && tar -czf opencv-build.tar.gz *
+  cd ~/ && tar -czf opencv-build.tar.gz opencv
   echo "Done."
 }
 

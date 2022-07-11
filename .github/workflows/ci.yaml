@@ -22,9 +22,9 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: opencv-build-${{ env.OPENCV_VERSION }}.tar.gz
-          path: ~/opencv/opencv-build.tar.gz
+          path: ~/opencv-build.tar.gz
 
       - name: Build the OpenCV image
         run: |
-          cp ~/opencv/$OPENCV_TAR_NAME .
+          cp ~/$OPENCV_TAR_NAME .
           docker build -t opencv .
