@@ -3,13 +3,15 @@ OPENCV_HOME=/usr/local/opencv
 
 mkdir -p $OPENCV_HOME
 
-cmake --version
-
 echo "Unpacking the tarball with the compiled files."
 tar -xf opencv-build.tar.gz -C $OPENCV_HOME
 echo "Done."
 
-ls -lrt $OPENCV_HOME
+cd opencv
+
+for i in *; do
+  sed -i 's/\/home\/runner\/opencv\//\/usr\/local\/opencv\//g' $i
+done
 
 # cd $OPENCV_HOME/build
 
