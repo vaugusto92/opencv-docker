@@ -7,11 +7,12 @@ echo "Unpacking the tarball with the compiled files."
 tar -xf opencv-build.tar.gz -C $OPENCV_HOME
 echo "Done."
 
-cd opencv
+cd $OPENCV_HOME
+ls -lrt
 
-for i in *; do
-  sed -i 's/\/home\/runner\/opencv\//\/usr\/local\/opencv\//g' $i
-done
+# for i in *; do
+#   sed -i 's/\/home\/runner\/opencv\//\/usr\/local\/opencv\//g' $i
+# done
 
 # cd $OPENCV_HOME/build
 

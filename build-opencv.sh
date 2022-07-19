@@ -29,7 +29,9 @@ buildOpenCV() {
   make -s -j$(nproc) > /dev/null
 
   echo "Constructing a tarball with the compiled files."
-  cd ~/ && tar -czf opencv-build.tar.gz opencv
+  cd ~/
+  rm opencv.zip
+  tar -czf opencv-build.tar.gz opencv
   echo "Done."
 }
 
