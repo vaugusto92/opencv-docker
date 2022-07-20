@@ -1,24 +1,18 @@
 OPENCV_VERSION=4.6.0
-OPENCV_HOME=/usr/local/opencv
-
-mkdir -p $OPENCV_HOME
+OPENCV_HOME=/usr/local/
+OPENCV_BUILD=$OPENCV_HOME/opencv/build
 
 echo "Unpacking the tarball with the compiled files."
 tar -xf opencv-build.tar.gz -C $OPENCV_HOME
 echo "Done."
 
-cd $OPENCV_HOME
-ls -lrt
+cd $OPENCV_BUILD
+find ./ -type f -exec sed -i -e 's/\/home\/runner\/opencv\//\/usr\/local\/opencv\//g' {} \;
+find ./ -type f -exec sed -i -e 's/\/usr\/local\/bin\/cmake/\/usr\/bin\/cmake/g' {} \;
 
-# for i in *; do
-#   sed -i 's/\/home\/runner\/opencv\//\/usr\/local\/opencv\//g' $i
-# done
+make install
 
-# cd $OPENCV_HOME/build
-
-# make install
-
-# cd $OPENCV_HOME
+# cd $OPENCV_HOME/opencv
 
 # cp -r build/bin/ . && cp -r build/lib/ .
 # rm -rf build

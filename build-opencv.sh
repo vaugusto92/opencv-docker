@@ -30,7 +30,7 @@ buildOpenCV() {
 
   echo "Constructing a tarball with the compiled files."
   cd ~/
-  rm opencv.zip
+  rm $OPENCV_TMP/opencv.zip 
   tar -czf opencv-build.tar.gz opencv
   echo "Done."
 }
