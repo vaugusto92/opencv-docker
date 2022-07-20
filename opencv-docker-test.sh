@@ -27,17 +27,37 @@ buildOpenCV() {
         ../opencv-4.6.0/ 
 
   make -j$(nproc)
-
-  # echo "Constructing a tarball with the compiled files."
-  # cd ~/
-  # rm $OPENCV_TMP/opencv.zip 
-  # tar -czf opencv-build.tar.gz opencv
-  # echo "Done."
+  make install
 }
 
-# function ensureBuildSuccess() {
-#   find . -type f -name "opencv-build.tar.gz" | grep . || exit 1
-# }
+setupClojureEnvironment() {
+  jarVersion="${OPENCV_VERSION//./""}"
+
+  buildFolder=$OPENCV_TMP/build
+  native_folder=$buildFolder/native/linux/x86_64/
+
+  mkdir -p $buildFolder/clj-opencv && cd $buildFolder/clj-opencv
+  cp $buildFolder/bin/opencv-$jarVersion.jar .
+
+  mkdir -p ~/.lein
+  cd ~/.lein
+  echo "{:user {:plugins [[lein-localrepo \"0.5.2\"]]}}" > profiles.clj
+
+  cd $buildFolder/clj-opencv
+  lein localrepo install opencv-$jarVersion.jar opencv/opencv $OPENCV_VERSION
+}
+
+copyOpenCVBinaries() {
+  cd $OPENCV_TMP
+  cp -r build/bin/ . && cp -r build/lib/ .
+  rm -rf build
+  mkdir build && cp -r ./bin build/ && cp -r ./lib build/
+  rm -rf bin/ && rm -rf lib/
+
+  rm -rf opencv-$OPENCV_VERSION
+  rm -f opencv.zip
+}
 
 buildOpenCV
-# ensureBuildSuccess
+copyOpenCVBinaries
+# setupClojureEnvironment
