@@ -13,7 +13,11 @@ RUN bash leiningen.sh
 
 RUN bash -c hash -r
 
-COPY ./opencv-build.tar.gz ./
-COPY ./install-opencv.sh ./
+COPY ./opencv-docker-test.sh ./
+RUN bash opencv-docker-test.sh
 
-RUN bash install-opencv.sh
+
+# COPY ./opencv-build.tar.gz ./
+# COPY ./install-opencv.sh ./
+
+# RUN bash install-opencv.sh

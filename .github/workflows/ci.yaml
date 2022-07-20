@@ -15,16 +15,5 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Build OpenCV  
-        run: bash build-opencv.sh
-
-      - name: Upload OpenCV binaries
-        uses: actions/upload-artifact@v3
-        with:
-          name: opencv-build
-          path: ~/opencv-build.tar.gz
-
       - name: Build the OpenCV image
-        run: |
-          cp ~/$OPENCV_TAR_NAME .
-          docker build -t opencv .
+        run: docker build -t opencv .
