@@ -60,4 +60,4 @@ copyOpenCVBinaries() {
 
 buildOpenCV
 copyOpenCVBinaries
-# setupClojureEnvironment
+setupClojureEnvironment
